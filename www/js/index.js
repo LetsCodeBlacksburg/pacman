@@ -48,7 +48,7 @@ document.onkeydown = function(e) {
 }
 
 function setPlayerVector(direction) {
-	if (isDirectionBlocked(direction) && player.isBounded) {
+	if (enforceBounds(direction) && player.isBounded) {
 		direction = player.direction;
 	}
 	player.direction = direction;

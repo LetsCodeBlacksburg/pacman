@@ -67,41 +67,12 @@ function getPlayerLoc() {
 	if (dir == 'ArrowUp')    { loc[1] -= movement; }
 	if (dir == 'ArrowDown')  { loc[1] += movement; }
 
-	enforceBounds(loc);
+	enforceBounds(player.direction);
 
 	return loc;
 }
 
-function enforceBounds(loc) {
-	var radius = player.radius;
-	var leftBound = 0 + radius;
-	var lowerBound = leftBound;
-	var rightBound = canvas.width - radius;
-	var upperBound = canvas.height - radius;
-
-  if (loc[0] <= leftBound)  { 
-		loc[0] = leftBound; 
-		if (player.direction == 'ArrowLeft') player.isMoving = false;
-		player.isBounded = true;
-	}
-	if (loc[0] >= rightBound) { 
-		loc[0] = rightBound; 
-		if (player.direction == 'ArrowRight') player.isMoving = false;
-		player.isBounded = true;
-	}
-  if (loc[1] <= lowerBound) { 
-		loc[1] = lowerBound; 
-		if (player.direction == 'ArrowUp') player.isMoving = false;
-		player.isBounded = true;
-	}
-  if (loc[1] >= upperBound) { 
-		loc[1] = upperBound; 
-		if (player.direction == 'ArrowDown') player.isMoving = false;
-		player.isBounded = true;
-	}
-}
-
-function isDirectionBlocked(direction) {
+function enforceBounds(direction) {
 	var loc = player.location;
 	var radius = player.radius;
 	var leftBound = 0 + radius;
@@ -111,19 +82,39 @@ function isDirectionBlocked(direction) {
 
 	switch(direction) {
 		case('ArrowUp'):
-			if (loc[1] <= lowerBound) return true;
+			if (loc[1] <= lowerBound) {
+				loc[1] = lowerBound;
+				player.isMoving = false; 
+				player.isBounded = true;
+				return true;
+			}
 			break;
 		case('ArrowDown'):
-			if (loc[1] >= upperBound) return true;
+			if (loc[1] >= upperBound) {
+				loc[1] = upperBound;
+				player.isMoving = false; 
+				player.isBounded = true;
+				return true;
+			}
 			break;
 		case('ArrowLeft'):
-			if (loc[0] <= leftBound)  return true;
+			if (loc[0] <= leftBound) {
+				loc[0] = leftBound;
+				player.isMoving = false; 
+				player.isBounded = true;
+				return true;
+			}
 			break;
 		case('ArrowRight'):
-			if (loc[0] >= rightBound) return true;
+			if (loc[0] >= rightBound) { 
+				loc[0] = rightBound;
+				player.isMoving = false; 
+				player.isBounded = true;
+				return true;
+			}
 			break;
 		default:
-			return;
+			return false;
 	}
 }
 
