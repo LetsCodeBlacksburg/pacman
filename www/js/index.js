@@ -15,9 +15,19 @@ var player = {
 	"animationOperator": 1
 };
 
+var dots = {
+	"small": {
+		"radius": 2,
+		"location": [ 
+			[168, 150], [168, 160], [168, 170], [168, 180], [168, 190] 
+		]
+	}
+}
+
 var game = {
 	"object": { 
-		"player": player
+		"player": player,
+		"dot":    dots,
 	}
 };
 
