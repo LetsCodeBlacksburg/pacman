@@ -6,7 +6,6 @@ function main() {
 function drawPlayer() {
 	var loc = getPlayerLoc();
 	drawPlayerBody(loc);
-	//drawPlayerMouth(loc);
 }
 
 function drawPlayerBody(loc) {
@@ -83,18 +82,48 @@ function enforceBounds(loc) {
   if (loc[0] <= leftBound)  { 
 		loc[0] = leftBound; 
 		if (player.direction == 'ArrowLeft') player.isMoving = false;
+		player.isBounded = true;
 	}
 	if (loc[0] >= rightBound) { 
 		loc[0] = rightBound; 
 		if (player.direction == 'ArrowRight') player.isMoving = false;
+		player.isBounded = true;
 	}
   if (loc[1] <= lowerBound) { 
 		loc[1] = lowerBound; 
 		if (player.direction == 'ArrowUp') player.isMoving = false;
+		player.isBounded = true;
 	}
   if (loc[1] >= upperBound) { 
 		loc[1] = upperBound; 
 		if (player.direction == 'ArrowDown') player.isMoving = false;
+		player.isBounded = true;
+	}
+}
+
+function isDirectionBlocked(direction) {
+	var loc = player.location;
+	var radius = player.radius;
+	var leftBound = 0 + radius;
+	var lowerBound = leftBound;
+	var rightBound = canvas.width - radius;
+	var upperBound = canvas.height - radius;
+
+	switch(direction) {
+		case('ArrowUp'):
+			if (loc[1] <= lowerBound) return true;
+			break;
+		case('ArrowDown'):
+			if (loc[1] >= upperBound) return true;
+			break;
+		case('ArrowLeft'):
+			if (loc[0] <= leftBound)  return true;
+			break;
+		case('ArrowRight'):
+			if (loc[0] >= rightBound) return true;
+			break;
+		default:
+			return;
 	}
 }
 
