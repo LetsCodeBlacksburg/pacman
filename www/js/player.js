@@ -1,3 +1,13 @@
+var player = {
+	"radius": 11,
+	"direction": undefined,
+	"isMoving": false,
+	"location": [canvas.width / 2, (canvas.height * 0.735)],
+	"animationFrame": 0,
+	//"isBounded": false,
+	"animationOperator": 1
+};
+
 function drawPlayer() {
 	var loc = getPlayerLoc();
 	drawPlayerBody(loc);
@@ -75,58 +85,102 @@ function getPlayerLoc() {
 	var dir = player.direction;
 	var movement = 2;
 
-	if (dir == 'ArrowLeft')  { loc[0] -= movement; }
-	if (dir == 'ArrowRight') { loc[0] += movement; }
-	if (dir == 'ArrowUp')    { loc[1] -= movement; }
-	if (dir == 'ArrowDown')  { loc[1] += movement; }
+	if (player.isMoving) {
+		if (dir == 'ArrowLeft')  { loc[0] -= movement; }
+		if (dir == 'ArrowRight') { loc[0] += movement; }
+		if (dir == 'ArrowUp')    { loc[1] -= movement; }
+		if (dir == 'ArrowDown')  { loc[1] += movement; }
+	}
 
 	enforceBounds(player.direction);
 
 	return loc;
 }
 
-function enforceBounds(direction) {
+function enforceBounds(direction, debug) {
 	var loc = player.location;
 	var radius = player.radius;
+
 	var leftBound = 0 + radius;
 	var lowerBound = leftBound;
 	var rightBound = canvas.width - radius;
 	var upperBound = canvas.height - radius;
 
+	var playerFront = [];
+	var nextQuadrant = [];
+
 	switch(direction) {
 		case('ArrowUp'):
 			if (loc[1] <= lowerBound) {
-				loc[1] = lowerBound;
+				//loc[1] = lowerBound;
 				player.isMoving = false; 
-				player.isBounded = true;
+				//player.isBounded = true;
 				return true;
 			}
+			for (var x = (loc[0] - radius + 1); x < (loc[0] + radius -1); x++)
+				playerFront.push( [x, (loc[1] - radius - 1)] );
 			break;
 		case('ArrowDown'):
 			if (loc[1] >= upperBound) {
-				loc[1] = upperBound;
+				//loc[1] = upperBound;
 				player.isMoving = false; 
-				player.isBounded = true;
+				//player.isBounded = true;
 				return true;
 			}
+			for (var x = (loc[0] - radius + 1); x < (loc[0] + radius - 1); x++)
+				playerFront.push( [x, (loc[1] + radius + 1)] );
 			break;
 		case('ArrowLeft'):
 			if (loc[0] <= leftBound) {
-				loc[0] = leftBound;
+				//loc[0] = leftBound;
 				player.isMoving = false; 
-				player.isBounded = true;
+				//player.isBounded = true;
 				return true;
 			}
+			for (var y = (loc[1] - radius + 1); y < (loc[1] + radius - 1); y++)
+				playerFront.push( [loc[0] - radius - 1, y] );
 			break;
 		case('ArrowRight'):
 			if (loc[0] >= rightBound) { 
-				loc[0] = rightBound;
+				//loc[0] = rightBound;
 				player.isMoving = false; 
-				player.isBounded = true;
+				//player.isBounded = true;
 				return true;
 			}
+			for (var y = (loc[1] - radius + 1); y < (loc[1] + radius - 1); y++)
+				playerFront.push( [loc[0] + radius + 1, y] );
 			break;
 		default:
 			return false;
 	}
+
+	var mazeBound = false;
+
+	for (var f = 0; f < playerFront.length; f++) {
+		var fLoc = playerFront[f];
+		var imageData = ctx.getImageData(fLoc[0], fLoc[1], 1, 1);
+		var d = imageData.data; 
+		//if (d[0] == 0 && d[1] == 0 && d[2] == 0) {
+		//} else {
+			//imageData.data[0] = 255;
+			//imageData.data[1] = 255;
+			//imageData.data[2] = 255;
+			//imageData.data[3] = 255;
+			//ctx.putImageData(imageData, fLoc[0], fLoc[1]);
+			//mazeBound = true;
+		//}
+	}
+	if (mazeBound) {
+		player.isMoving = false;
+		//player.isBounded = true;
+		return true;
+	}
+
+	return false;
+}
+
+function stopPlayer() {
+	player.isMoving = false;
+	//player.isBounded = true;
+	return true;
 }

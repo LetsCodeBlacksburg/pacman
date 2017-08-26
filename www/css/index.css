@@ -1,3 +1,7 @@
-#canvas {
+#canvas, #canvastest {
 	background: black;
+}
+
+img {
+	/*display: none;*/
 }

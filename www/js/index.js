@@ -1,35 +1,24 @@
-var gameRefresh = setInterval(main, 33);
 
 
 var cv = document.getElementById('canvas');
 var ctx = cv.getContext('2d');
 var canvas = ctx.canvas;
 
-var player = {
-	"radius": 10,
-	"direction": undefined,
-	"isMoving": false,
-	"location": [canvas.width/2, canvas.height/2],
-	"animationFrame": 0,
-	"isBounded": false,
-	"animationOperator": 1
-};
 
 var dots = {
 	"small": {
 		"radius": 2,
-		"location": [ 
-			[168, 150], [168, 160], [168, 170], [168, 180], [168, 190] 
-		]
+		"location": (function() {
+			var locs = [];
+ /*     for (var x = 0; x < canvas.width; x+=10) {*/
+				//for (var y = 0; y < canvas.height; y+=10) {
+					//locs.push([x,y]);
+				//}
+			/*}*/
+			return locs;
+		})()
 	}
 }
-
-var game = {
-	"object": { 
-		"player": player,
-		"dot":    dots,
-	}
-};
 
 document.onkeydown = function(e) {
 	e = e || window.event;
@@ -54,13 +43,17 @@ document.onkeydown = function(e) {
 			return;
 	}
 
-	player.isBounded = false;
+	//player.isBounded = false;
 }
 
-function setPlayerVector(direction) {
-	if (enforceBounds(direction) && player.isBounded) {
-		direction = player.direction;
+function setPlayerVector(newDirection) {
+	var newPathBlocked = enforceBounds(newDirection, 1);
+	var currentPathBlocked = enforceBounds(player.direction, 1);
+	console.log('newpath '+newDirection+' blocked? '+newPathBlocked+' curpath '+player.direction+' blocked? '+currentPathBlocked);
+	if (newPathBlocked && ! player.isMoving) {
+		newDirection = player.direction;
 	}
-	player.direction = direction;
-	player.isMoving = true;
+	player.direction = newDirection;
+	if (! newPathBlocked || ! currentPathBlocked)
+		player.isMoving = true;
 }
