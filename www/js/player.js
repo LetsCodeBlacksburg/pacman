@@ -1,8 +1,8 @@
 var player = {
-	"radius": 11,
+	"radius": 12,
 	"direction": undefined,
 	"isMoving": false,
-	"location": [canvas.width / 2, (canvas.height * 0.735)],
+	"location": [canvas.width / 2, (canvas.height * 0.736111)],
 	"animationFrame": 0,
 	//"isBounded": false,
 	"animationOperator": 1
@@ -117,8 +117,9 @@ function enforceBounds(direction, debug) {
 				//player.isBounded = true;
 				return true;
 			}
-			for (var x = (loc[0] - radius + 1); x < (loc[0] + radius -1); x++)
+			for (var x = (loc[0] - radius + 1); x < (loc[0] + radius -1); x++) {
 				playerFront.push( [x, (loc[1] - radius - 1)] );
+			}
 			break;
 		case('ArrowDown'):
 			if (loc[1] >= upperBound) {
@@ -154,12 +155,14 @@ function enforceBounds(direction, debug) {
 			return false;
 	}
 
-	var mazeBound = false;
+	//var mazeBound = false;
 
-	for (var f = 0; f < playerFront.length; f++) {
-		var fLoc = playerFront[f];
-		var imageData = ctx.getImageData(fLoc[0], fLoc[1], 1, 1);
-		var d = imageData.data; 
+	var mazeBound = loc2Quad(player.location, direction)
+	console.log('mazebound? '+mazeBound);	
+	/*for (var f = 0; f < playerFront.length; f++) {*/
+		//var fLoc = playerFront[f];
+		//var imageData = ctx.getImageData(fLoc[0], fLoc[1], 1, 1);
+		//var d = imageData.data; 
 		//if (d[0] == 0 && d[1] == 0 && d[2] == 0) {
 		//} else {
 			//imageData.data[0] = 255;
@@ -169,7 +172,7 @@ function enforceBounds(direction, debug) {
 			//ctx.putImageData(imageData, fLoc[0], fLoc[1]);
 			//mazeBound = true;
 		//}
-	}
+	/*}*/
 	if (mazeBound) {
 		player.isMoving = false;
 		//player.isBounded = true;

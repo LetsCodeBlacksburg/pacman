@@ -16,43 +16,47 @@ var gameRefresh = setInterval(main, 33);
 
 function drawBackground() {
 
-	var space = player.radius * 2;
-	for (var x = 0; x + space < canvas.width; x += space) {
-		for (var y = 0; y + space < canvas.height; y += space) {
+	var img = document.getElementById("level");
+	ctx.drawImage(img,0,0);
+
+	drawGameGrid();
+}
+
+function drawGameGrid(debug) {
+
+	ctx.strokeStyle = "grey";
+
+	var space = player.radius;
+
+	for (var x = 0; x + space <= canvas.width; x += space) {
+		for (var y = 0; y + space <= canvas.height; y += space) {
 			ctx.beginPath();
 			ctx.rect(x,y, space, space);
-			ctx.strokeStyle = "white";
 			ctx.stroke();
 			ctx.closePath();
 		}
 	}
 
-	//var img = document.getElementById("level");
-	//ctx.drawImage(img,0,0);
-	
-	//ctx.beginPath();
-	//ctx.rect(21,21,150,150);
-	//ctx.strokeStyle = "red";
-	//ctx.stroke();
-	//ctx.closePath();
+	ctx.fillStyle = "red";
 
-	//ctx.beginPath();
-	//ctx.rect(193,21,50,150);
-	//ctx.strokeStyle = "red";
-	//ctx.stroke();
-	//ctx.closePath();
+ for (var quad in openQuadrants) {
+		var loc = quad.split(",");
 
-	//ctx.beginPath();
-	//ctx.rect(21,193,150,150);
-	//ctx.strokeStyle = "red";
-	//ctx.stroke();
-	//ctx.closePath();
+		ctx.beginPath();
+		ctx.globalAlpha = 0.5;
+		ctx.rect(loc[0] * space, loc[1] * space, space, space);
+		ctx.fill();
+		ctx.globalAlpha = 1;
+		ctx.closePath();
+	}
 
-	//ctx.beginPath();
-	//ctx.rect(193,193,50,150);
-	//ctx.strokeStyle = "red";
-	//ctx.stroke();
-	//ctx.closePath();
+	ctx.fillStyle = "green";
+	ctx.beginPath();
+	ctx.globalAlpha = 0.5;
+	ctx.rect(13.5 * space, 26 * space, space, space);
+	ctx.fill();
+	ctx.globalAlpha = 1;
+	ctx.closePath();
 }
 
 function drawDots() {
